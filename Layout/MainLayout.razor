@@ -44,16 +44,16 @@
         </Header>
         <Content>
             <div>
-                <SfTextBox @* Input="@UserChanged" *@ Placeholder="Username"></SfTextBox>
+                <SfTextBox Input="@UserChanged" Placeholder="Username"></SfTextBox>
             </div>
             <div>
-                <SfTextBox @* Input="@PasswordChanged" *@ Placeholder="Password" Type="InputType.Password"></SfTextBox>
+                <SfTextBox Input="@PasswordChanged" Placeholder="Password" Type="InputType.Password"></SfTextBox>
             </div>
             <div>
                 <SfButton CssClass="e-inherit" OnClick="@CloseDialog">
                     Cancel
                 </SfButton>
-                <SfButton CssClass="e-inherit e-primary" OnClick="@Login" Disabled="@disableLogin" >
+                <SfButton CssClass="e-inherit e-primary" OnClick="@Login" Disabled="@disableLogin">
                     Login
                 </SfButton>
             </div>
@@ -71,17 +71,17 @@
     private bool disableLogin { get; set; } = true;
     private string userMsg = "Login";
 
-    // private void UserChanged(InputEventArgs args)
-    // {
-    //     username = args.Value;
-    //     disableLogin = string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password);
-    // }
+    private void UserChanged(InputEventArgs args)
+    {
+        username = args.Value;
+        disableLogin = string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password);
+    }
 
-    // private void PasswordChanged(InputEventArgs args)
-    // {
-    //     password = args.Value;
-    //     disableLogin = string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password);
-    // }
+    private void PasswordChanged(InputEventArgs args)
+    {
+        password = args.Value;
+        disableLogin = string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password);
+    }
 
     private async Task OpenNewTab()
     {
@@ -104,22 +104,45 @@
 
     private async Task Login()
     {
-        // LogInRequest loginRequest = new LogInRequest { userName = username, password = password };
-        // var response = await Http.PostAsJsonAsync("api/Login", loginRequest);
-        // if (response.IsSuccessStatusCode)
-        // {
-        //     User user = await response.Content.ReadFromJsonAsync<User>();
-        //     State.currentUser = user;
-        //     userMsg = "Welcome " + user.Name;
-        // }
-        // else
-        // {
-        //     State.LogOut();
-        // }
-        // loginVisibility = false;
+        LogInRequest loginRequest = new LogInRequest { userName = username, password = password };
+        var response = await Http.PostAsJsonAsync("api/Login", loginRequest);
+        if (response.IsSuccessStatusCode)
+        {
+            User user = await response.Content.ReadFromJsonAsync<User>();
+            //State.currentUser = user;
+            userMsg = "Welcome " + user.Name;
+        }
+        else
+        {
+            //State.LogOut();
+        }
+        loginVisibility = false;
     }
     private void CloseDialog()
     {
         loginVisibility = false;
     }
+
+    public class LogInRequest
+    {
+        public string userName { get; set; } = "";
+        public string password { get; set; } = "";
+    }
+    public class User
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string UserName { get; set; }
+        public enmRoles Role { get; set; }
+    }
+    public enum enmRoles
+    {
+        Guest,
+        User,
+        SuperUser,
+        Admin
+    }
+
 }

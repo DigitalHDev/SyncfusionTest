@@ -10,7 +10,8 @@
 @inject IJSRuntime JSRuntime
 @inject Microsoft.AspNetCore.Components.NavigationManager UriHelper
 @inject HttpClient Http
-@* @inject clsState State *@
+@inject clsState State
+@using SyncfusionTest
 
 <link href="css/MainLayout.css" rel="stylesheet" />
 <div class="row">
@@ -128,21 +129,5 @@
         public string userName { get; set; } = "";
         public string password { get; set; } = "";
     }
-    public class User
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string UserName { get; set; }
-        public enmRoles Role { get; set; }
-    }
-    public enum enmRoles
-    {
-        Guest,
-        User,
-        SuperUser,
-        Admin
-    }
-
+    
 }
